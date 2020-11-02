@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class DestroyOBJ : MonoBehaviour
 {
-    RaycastHit hit;
+    
+    public Camera myCamera;
+    public Transform towerParent;
+    public GameObject tower;
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        int layerMask = 1 << 8;
-        layerMask = ~layerMask;
 
         if (Input.GetMouseButtonUp(0))
         {
-            Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 100f));
+            Vector3 MousePosition = Input.mousePosition;
 
-            Vector3 direction = worldMousePosition - Camera.main.transform.position;
-
-            if (Physics.Raycast(Camera.main.transform.position, direction, out hit, Mathf.Infinity, layerMask))
+            Ray ray = myCamera.ScreenPointToRay(MousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
             {
-                Debug.DrawLine(Camera.main.transform.position, hit.point, Color.green, 0.5f);
-                if(hit.collider.gameObject.name == "EasyEnemy")
+                if(hit.collider.CompareTag("EasyEnemy"))
                 {
                     GameObject.Find("GameManager").GetComponent<GameManager>().EnemyHit();
                     if(GameObject.Find("GameManager").GetComponent<GameManager>().EnemyHealth == 0)
@@ -29,10 +29,15 @@ public class DestroyOBJ : MonoBehaviour
                         Destroy(hit.collider.gameObject);
                     }
                 }
-            }
-            else
-            {
-                Debug.DrawLine(Camera.main.transform.position, worldMousePosition, Color.red, 0.5f);
+                if (hit.collider.CompareTag("TowerPosition"))
+                {
+                    if (GameObject.Find("GameManager").GetComponent<GameManager>().CoinCount >= 40)
+                    {
+                        Instantiate(tower, hit.transform.position, Quaternion.identity, towerParent);
+                        GameObject.Find("GameManager").GetComponent<GameManager>().DefensePlaced();
+                        Destroy(hit.collider.gameObject);
+                    }
+                }
             }
         }
     }
