@@ -52,5 +52,22 @@ public class Enemy : MonoBehaviour
     }
   }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.name == "Cube")
+        {
+            Debug.Log("Got hit");
+            GameObject.Find("GameManager").GetComponent<GameManager>().TowerHit();
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name == "Cube")
+        {
+            Debug.Log("Got hit");
+            GameObject.Find("GameManager").GetComponent<GameManager>().TowerHit();
+        }
+    }
 
 }
