@@ -4,16 +4,24 @@ using UnityEngine;
 
 public class DestroyOBJ : MonoBehaviour
 {
-    
+
+    //Sounds
+    public AudioSource impactSound;
+    public AudioClip clip1;
+
     public Camera myCamera;
     public Transform towerParent;
     public GameObject tower;
 
+    private void Start()
+    {
+        impactSound = GetComponent<AudioSource>();
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Vector3 MousePosition = Input.mousePosition;
 
@@ -26,7 +34,9 @@ public class DestroyOBJ : MonoBehaviour
                     GameObject.Find("GameManager").GetComponent<GameManager>().EnemyHit();
                     if(GameObject.Find("GameManager").GetComponent<GameManager>().EnemyHealth == 0)
                     {
-                        Destroy(hit.collider.gameObject);
+                        impactSound.clip = clip1;
+                        impactSound.Play();
+                        Destroy(hit.collider.gameObject); 
                     }
                 }
                 if (hit.collider.CompareTag("TowerPosition"))

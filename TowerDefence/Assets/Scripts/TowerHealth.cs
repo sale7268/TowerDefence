@@ -7,16 +7,7 @@ public class TowerHealth : MonoBehaviour
     // Start is called before the first frame update
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("EasyEnemy"))
-        {
-            Debug.Log("Got hit");
-            GameObject.Find("GameManager").GetComponent<GameManager>().TowerHit();
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("EasyEnemy"))
+        if (other.gameObject.name == "EasyEnemy 1(Clone)")
         {
             Debug.Log("Got hit");
             GameObject.Find("GameManager").GetComponent<GameManager>().TowerHit();

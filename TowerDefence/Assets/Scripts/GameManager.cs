@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     public int EnemyHealth = 100;
     public int TowerHealth = 100;
-    public int CoinCount = 0;
+    public int CoinCount = 100;
 
     public Image healthBar;
 
@@ -28,11 +28,7 @@ public class GameManager : MonoBehaviour
     public void EnemyHit()
     {
         EnemyHealth -= 20;
-        healthBar.fillAmount = EnemyHealth/100f;
-
-        EnemyHealthText.GetComponent<TMPro.TextMeshProUGUI>().text = EnemyHealth.ToString();
-        EnemyHealthText.GetComponent<TMPro.TextMeshProUGUI>().color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
-        Debug.Log("Ouch!");
+        //healthBar.fillAmount = EnemyHealth/100f;
 
         CoinCount += 10;
         CoinText.GetComponent<TMPro.TextMeshProUGUI>().text = CoinCount.ToString();

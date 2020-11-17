@@ -1,19 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-  public Waypoints[] navPoints;
+  private Waypoints[] navPoints;
   private Transform target;
   private Vector3 direction;
   public float amplify = 1;
   private int index = 0;
   private bool move = true;
+    float Starthealth = 100;
+    float currentHealth;
+    public Image healthbar;
 
-  // Start is called before the first frame update
-  void Start()
+    //Sounds
+    public AudioSource impactSound;
+    public AudioClip clip1;
+
+    private void Start()
+    {
+        impactSound = GetComponent<AudioSource>();
+    }
+
+    // Start is called before the first frame update
+    public void StartEnemy(Waypoints[] navigationalPath)
   {
+    currentHealth = Starthealth;
+    navPoints = navigationalPath;
     //Place our enemy at the start point
     transform.position = navPoints[index].transform.position;
     NextWaypoint();
@@ -30,7 +45,7 @@ public class Enemy : MonoBehaviour
     {
       transform.Translate(direction.normalized * Time.deltaTime * amplify);
 
-      if ((transform.position - target.position).magnitude < .1f)
+      if ((this.transform.position - target.position).magnitude < .1f)
       {
         NextWaypoint();
       }
@@ -52,20 +67,25 @@ public class Enemy : MonoBehaviour
     }
   }
 
-    private void OnTriggerEnter(Collider other)
+    public void EnemyHit()
     {
-        if (other.gameObject.name == "Cube")
+        if(currentHealth <= 0)
         {
-            Debug.Log("Got hit");
-            GameObject.Find("GameManager").GetComponent<GameManager>().TowerHit();
+            Debug.Log(currentHealth);
+            impactSound.clip = clip1;
+            impactSound.Play();
+            Destroy(this.gameObject);
         }
+        currentHealth-=0.1f;
+        healthbar.fillAmount = currentHealth / 100f;
+        GameObject.Find("GameManager").GetComponent<GameManager>().EnemyHit();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.name == "Cube")
+        if(other.gameObject.name == "Cube")
         {
-            Debug.Log("Got hit");
+            Debug.Log("Attacking tower");
             GameObject.Find("GameManager").GetComponent<GameManager>().TowerHit();
         }
     }
